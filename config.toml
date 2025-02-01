@@ -1,0 +1,4 @@
+baseURL = 'https://codeneverdies.github.io/'
+languageCode = 'en-us'
+title = 'codeneverdies!'
+theme = 'LoveIt'

@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>All Posts - codeneverdies!</title>
+        <link>https://codeneverdies.github.io/posts/</link>
+        <description>All Posts | codeneverdies!</description>
+        <generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 30 Jan 2025 20:05:48 -0500</lastBuildDate><atom:link href="https://codeneverdies.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>1. Hello</title>
+    <link>https://codeneverdies.github.io/posts/hello/</link>
+    <pubDate>Thu, 30 Jan 2025 20:05:48 -0500</pubDate>
+    <author>codeneverdies</author>
+    <guid>https://codeneverdies.github.io/posts/hello/</guid>
+    <description><![CDATA[Welcome to my blog I&rsquo;ll be posting things here from time to time if you find anything wrong in my blogs please give me a heads up I currently have no one else to proof read them :(]]></description>
+</item>
+</channel>
+</rss>
