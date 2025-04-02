@@ -270,11 +270,11 @@ and document the things I find to support that idea. Thank you for reading.
 
 > ## References
 
-https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread
+[https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread)
 
-https://pentestlab.blog/2017/04/04/dll-injection/
+[https://pentestlab.blog/2017/04/04/dll-injection/](https://pentestlab.blog/2017/04/04/dll-injection/)
 
-https://www.ired.team/offensive-security/code-injection-process-injection/dll-injection#references
+[ired-teams's dllinjection](https://www.ired.team/offensive-security/code-injection-process-injection/dll-injection#references)
 
 [BakkesMod - Github repo](https://github.com/bakkesmodorg)
 
