@@ -7,7 +7,8 @@ baseurl:     ""
 url:         "https://codeneverdies.github.io"
 date_format: " "
 header_pages:
- - about.md
+ - guidedhacking.md
+ - gamevulns.md
 
 # Google services
 google_verification:
