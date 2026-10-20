@@ -1,7 +1,7 @@
 ---
 title: 'Inside Valve Anti-Cheat: How To Dump VAC Modules in 2025'
 date: 2025-04-20
-draft: true
+draft: false
 description: "In 2002 Valve created an Anti-Cheat solution called Valve Anti-Cheat aka VAC. The first game they implemented VAC into was Counter-Strike. When VAC was introduced it only operated in User Mode (Still does) meaning it runs entirely in user space and has no kernel component."
 categories: ['Game Security', 'Windows Internals']
 tags: ['VAC', 'Anti-Cheat']
