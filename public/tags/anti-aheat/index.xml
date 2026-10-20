@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Anti-Aheat on codeneverdies!</title>
+		<link>http://localhost:1313/tags/anti-aheat/</link>
+		<description>Recent content in Anti-Aheat on codeneverdies!</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 10 Oct 2026 00:18:21 -0700</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/anti-aheat/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Valve Anti-Cheat: Dumping VAC Modules in 2025</title>
+				<link>http://localhost:1313/posts/dumping-vac-modules/</link>
+				<pubDate>Sat, 10 Oct 2026 00:18:21 -0700</pubDate>
+				<guid>http://localhost:1313/posts/dumping-vac-modules/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

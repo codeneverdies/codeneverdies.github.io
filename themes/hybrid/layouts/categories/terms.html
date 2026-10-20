@@ -1,0 +1,11 @@
+{{ define "main" }}
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+    <p class="page-header__deck">
+      Categories group posts by theme (e.g. <em>game security</em>, <em>red teaming</em>),
+      expand a category to see all posts in said category.
+    </p>
+  </header>
+
+  {{ partial "taxonomy-terms-dropdown.html" (dict "taxonomy" "categories" "context" .) }}
+{{ end }}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Windows Kernel on codeneverdies!</title>
+		<link>http://localhost:1313/tags/windows-kernel/</link>
+		<description>Recent content in Windows Kernel on codeneverdies!</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 09 Oct 2026 22:09:06 -0700</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/windows-kernel/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Stopping Memory Acquisition via Crash Dumps</title>
+				<link>http://localhost:1313/posts/stopping-memory-acquisition/</link>
+				<pubDate>Fri, 09 Oct 2026 22:09:06 -0700</pubDate>
+				<guid>http://localhost:1313/posts/stopping-memory-acquisition/</guid>
+				<description>&lt;h2 id=&#34;memory-acquisition-via-crash-dumps&#34;&gt;Memory Acquisition via Crash Dumps&lt;/h2&gt;&#xA;&lt;p&gt;During a quick chat with a seasoned game hacker (daax), dumping anti-cheat drivers from crash dumps has been around for a while. If the adversary isn&amp;rsquo;t skilled enough to conduct a BYOVD attack and dump the driver, they can resort to this easier method. Here&amp;rsquo;s some external research to help you understand what this article will be about. On april 7th, 2023 a clever person on the guided hacking website named &lt;a href=&#34;https://guidedhacking.com/members/mrmoo.256455/&#34;&gt;MrMoo&lt;/a&gt; showed us &lt;a href=&#34;https://guidedhacking.com/threads/how-to-extract-ea-anticheat-driver-via-crash-dumps.20328/&#34;&gt;How To Dump EA&amp;rsquo;s Driver&lt;/a&gt; by intentionally crashing the system. Once the system rebooted he analyzed the kernel crash dump with volatility to dump the anti-cheat driver. June 7th, 2024 a user on unknowncheats &lt;a href=&#34;https://www.unknowncheats.me/forum/members/5120071.html&#34;&gt;LabGuy94&lt;/a&gt; posted about the &lt;a href=&#34;https://www.unknowncheats.me/forum/anti-cheat-bypass/640987-abusing-windows-complete-memory-crash-dumps.html&#34;&gt;same technique&lt;/a&gt;.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

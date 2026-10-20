@@ -1,0 +1,58 @@
+{{- $taxonomy := .taxonomy | default "tags" -}}
+{{- $ctx := .context -}}
+{{- $taxMap := index site.Taxonomies $taxonomy -}}
+
+<ul class="tag-index tag-index--dropdown" data-taxonomy="{{ $taxonomy }}">
+  {{- if $taxMap -}}
+    {{- range $taxMap.Alphabetical -}}
+      {{- $pages := sort .Pages "Date" "desc" -}}
+      <li class="tag-index__item">
+        <details class="tag-dropdown">
+          <summary class="tag-dropdown__summary">
+            <span class="tag-dropdown__label">{{ .Page.LinkTitle }}</span>
+            <span class="tag-index__count">{{ .Count }}</span>
+          </summary>
+          {{- if gt (len $pages) 0 -}}
+            <ul class="tag-dropdown__posts">
+              {{- range $pages -}}
+                <li>
+                  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+                  <time class="tag-dropdown__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+                </li>
+              {{- end -}}
+            </ul>
+          {{- else -}}
+            <p class="tag-dropdown__empty">No posts listed.</p>
+          {{- end -}}
+        </details>
+      </li>
+    {{- end -}}
+  {{- else if $ctx -}}
+    {{- range $ctx.Data.Terms.Alphabetical -}}
+      {{- $pages := sort .Page.Pages "Date" "desc" -}}
+      {{- if eq (len $pages) 0 -}}
+        {{- $pages = sort .Pages "Date" "desc" -}}
+      {{- end -}}
+      <li class="tag-index__item">
+        <details class="tag-dropdown">
+          <summary class="tag-dropdown__summary">
+            <span class="tag-dropdown__label">{{ .Page.LinkTitle }}</span>
+            <span class="tag-index__count">{{ .Count }}</span>
+          </summary>
+          {{- if gt (len $pages) 0 -}}
+            <ul class="tag-dropdown__posts">
+              {{- range $pages -}}
+                <li>
+                  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+                  <time class="tag-dropdown__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+                </li>
+              {{- end -}}
+            </ul>
+          {{- else -}}
+            <p class="tag-dropdown__empty">No posts listed.</p>
+          {{- end -}}
+        </details>
+      </li>
+    {{- end -}}
+  {{- end -}}
+</ul>

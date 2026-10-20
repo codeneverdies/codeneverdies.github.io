@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale | default "en" }}" dir="{{ or site.Language.Direction `ltr` }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body{{ with partial "body-class.html" . }} class="{{ . }}"{{ end }}>
+  {{- if and .IsPage (eq .Section "posts") }}
+  <div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
+    <div class="read-progress__bar" data-read-progress></div>
+  </div>
+  {{- end }}
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    {{ partial "header.html" . }}
+    <main id="main" class="site-main">
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "footer.html" . }}
+  </div>
+</body>
+</html>

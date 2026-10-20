@@ -1,0 +1,23 @@
+{{- $page := .page -}}
+{{- $menuID := .menuID -}}
+
+{{- with index site.Menus $menuID }}
+  <nav class="site-nav" aria-label="Primary">
+    <ul class="site-nav__list">
+      {{- range . }}
+        {{- $href := .URL | relLangURL -}}
+        {{- $active := or ($page.IsMenuCurrent $menuID .) ($page.HasMenuCurrent $menuID .) -}}
+        {{- if not $active -}}
+          {{- $active = eq ($page.RelPermalink | strings.TrimSuffix "/") ($href | strings.TrimSuffix "/") -}}
+        {{- end -}}
+        <li class="site-nav__item">
+          <a
+            class="site-nav__link{{ if $active }} is-active{{ end }}"
+            href="{{ $href }}"
+            {{ if $active }}aria-current="page"{{ end }}
+          >{{ .Name }}</a>
+        </li>
+      {{- end }}
+    </ul>
+  </nav>
+{{- end }}

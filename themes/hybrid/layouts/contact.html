@@ -1,0 +1,30 @@
+{{ define "main" }}
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">{{ .Title }}</h1>
+      {{ with .Description }}
+        <p class="post__deck">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    <div class="prose post__body">
+      {{ .Content }}
+      {{ if or site.Params.email site.Params.github site.Params.twitter site.Params.mastodon }}
+        <ul class="contact-links">
+          {{ with site.Params.email }}
+            <li><a href="mailto:{{ . }}">{{ . }}</a></li>
+          {{ end }}
+          {{ with site.Params.github }}
+            <li><a href="{{ . }}" rel="me noopener noreferrer">GitHub</a></li>
+          {{ end }}
+          {{ with site.Params.twitter }}
+            <li><a href="{{ . }}" rel="me noopener noreferrer">X / Twitter</a></li>
+          {{ end }}
+          {{ with site.Params.mastodon }}
+            <li><a href="{{ . }}" rel="me noopener noreferrer">Mastodon</a></li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </div>
+  </article>
+{{ end }}

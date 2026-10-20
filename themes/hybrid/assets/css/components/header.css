@@ -1,0 +1,82 @@
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+/* Post pages: byline already shows the avatar */
+body.layout-article .site-header__brand-link .author-pfp {
+  display: none;
+}
+
+.site-header__brand-link:hover .site-header__title {
+  color: var(--link-hover);
+}
+
+.site-header__title {
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.site-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__link {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-decoration: none;
+  position: relative;
+}
+
+.site-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--link), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.site-nav__link:hover,
+.site-nav__link.is-active {
+  color: var(--link-hover);
+}
+
+.site-nav__link:hover::after,
+.site-nav__link.is-active::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__link::after {
+    transition: none;
+  }
+}

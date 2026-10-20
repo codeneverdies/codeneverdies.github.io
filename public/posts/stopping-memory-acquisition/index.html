@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bugcheckin&#39; : Stopping Memory Acquisition via Crash Dumps · codeneverdies!</title>
+<meta name="description" content="It&#39;s no secret that cheaters and security researchers want to get their hands on unpacked anti-cheat software. Many anti-cheat developers virtualize and pack their binaries, making static analysis harder. This forces adversaries to analyze the anti-cheat software dynamically, which could entail stepping through the unpacking process manually then dumping the anti-cheat driver from memory. Attaching a kernel debugger can also be a problem due to anti-debugging checks, so how are people dumping anti-cheat drivers? And how could they prevent this in the future? That leads us to our topic today."><link rel="icon" href="/images/author.jpg" type="image/jpeg" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/author.jpg">
+<link rel="alternate" type="application/rss+xml" title="codeneverdies!" href="http://localhost:1313/index.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+      <link rel="stylesheet" href="/css/main.css">
+
+
+      <script src="/js/main.js" defer></script>
+
+
+</head>
+<body class="layout-article layout-article-v1">
+  <div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
+    <div class="read-progress__bar" data-read-progress></div>
+  </div>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header class="site-header">
+  <div class="site-header__brand">
+    <a class="site-header__brand-link" href="/">
+      <img
+  class="author-pfp author-pfp--sm"
+  src="/images/author.jpg"
+  alt="Nasir T profile photo"
+  width="32"
+  height="32"
+  decoding="async"
+  loading="lazy">
+
+      <span class="site-header__title">codeneverdies!</span>
+    </a>
+  </div>
+  
+  <nav class="site-nav" aria-label="Primary">
+    <ul class="site-nav__list"><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/about/"
+            
+          >About</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/contact/"
+            
+          >Contact</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/categories/"
+            
+          >Categories</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/tags/"
+            
+          >Tags</a>
+        </li>
+    </ul>
+  </nav>
+
+</header>
+
+    <main id="main" class="site-main">
+      
+  
+    <div class="post-layout">
+      <article class="post post__main">
+        <header class="post__header">
+          <div class="post__byline">
+            <img
+  class="author-pfp author-pfp--md"
+  src="/images/author.jpg"
+  alt="Nasir T profile photo"
+  width="40"
+  height="40"
+  decoding="async"
+  loading="lazy">
+
+            <span class="post__author">Nasir T</span>
+          </div>
+          <h1 class="post__title">Bugcheckin&#39; : Stopping Memory Acquisition via Crash Dumps</h1>
+          
+            <p class="post__deck">It&#39;s no secret that cheaters and security researchers want to get their hands on unpacked anti-cheat software. Many anti-cheat developers virtualize and pack their binaries, making static analysis harder. This forces adversaries to analyze the anti-cheat software dynamically, which could entail stepping through the unpacking process manually then dumping the anti-cheat driver from memory. Attaching a kernel debugger can also be a problem due to anti-debugging checks, so how are people dumping anti-cheat drivers? And how could they prevent this in the future? That leads us to our topic today.</p>
+          
+        </header>
+
+        <div class="prose post__body">
+          <h2 id="memory-acquisition-via-crash-dumps">Memory Acquisition via Crash Dumps</h2>
+<p>During a quick chat with a seasoned game hacker (daax), dumping anti-cheat drivers from crash dumps has been around for a while. If the adversary isn&rsquo;t skilled enough to conduct a BYOVD attack and dump the driver, they can resort to this easier method. Here&rsquo;s some external research to help you understand what this article will be about. On april 7th, 2023 a clever person on the guided hacking website named <a href="https://guidedhacking.com/members/mrmoo.256455/">MrMoo</a> showed us <a href="https://guidedhacking.com/threads/how-to-extract-ea-anticheat-driver-via-crash-dumps.20328/">How To Dump EA&rsquo;s Driver</a> by intentionally crashing the system. Once the system rebooted he analyzed the kernel crash dump with volatility to dump the anti-cheat driver. June 7th, 2024 a user on unknowncheats <a href="https://www.unknowncheats.me/forum/members/5120071.html">LabGuy94</a> posted about the <a href="https://www.unknowncheats.me/forum/anti-cheat-bypass/640987-abusing-windows-complete-memory-crash-dumps.html">same technique</a>.</p>
+<p>Two years later on march 5th, 2026 a researcher named <a href="https://x.com/s4dbrd">s4dbrd</a> <a href="https://s4dbrd.github.io/posts/reversing-bedaisy/">published</a> his analysis on BattlEye&rsquo;s anti-cheat driver utilizing this technique and NotMyFault to dump their driver from memory. Finally on june 16th, 2026 I <a href="https://guidedhacking.com/threads/how-to-dump-anti-cheat-kernel-drivers.21328/">published</a> a tutorial on the guided hacking showcasing how you can crash the system with and without NotMyFault. After the kernel memory dump was generated, I transfered it to my host machine and dumped the anti-cheat driver from the crash dump using windbg. One thing these all have in common is that they generate a bug check (BSOD). It may seem like this is a full proof method of dumping the anti-cheat because once the system is crashing the anti-cheat has no control. I like to think that this is far from the truth, the rest of this article aims to back that up and show you how this can be stopped.</p>
+<h2 id="stopping-memory-acquisition-via-crash-dumps">Stopping Memory Acquisition via Crash Dumps</h2>
+<p>Our journey starts at the manually initiated crash screen, we know that users are crashing their systems on purpose and a common bug check code seen is <code>MANUALLY_INITIATED_CRASH</code>.</p>
+<blockquote>
+<p><img src="/images/memory-acquisition/1.png" alt="1"></p>
+</blockquote>
+<p>If we search for this bug check code and snoop around MSDN, we&rsquo;ll that find Microsoft allows drivers to register callback functions that run when the system bug checks and starts to generate the kernel crash dump. A driver can register a bug check callback routine by calling <code>KeRegisterBugCheckCallback</code> or <code>KeRegisterBugCheckReasonCallback</code>. <code>KeRegisterBugCheckReasonCallback</code> is what we&rsquo;ll be using, this function is useful because in the <code>KBUGCHECK_CALLBACK_REASON Reason</code> argument we can specify <code>KbCallbackRemovePages</code>. This enum value tells the windows kernel that our callback will be removing pages from the crash dump. I&rsquo;m sure you can do something with the <code>KbCallbackDumpIo</code> type as well but I feel that my method is more straight forward. When you&rsquo;re writing bug check callbacks you&rsquo;re pretty restricted from what you can do so it&rsquo;s best to keep it simple. A bug check callback with type <code>KbCallbackDumpIo</code> can be called multiple times during the crash, so I just played it safe.</p>
+<h2 id="about-bug-check-callback-routines">About Bug Check Callback Routines</h2>
+<p>To understand more about what we&rsquo;re doing let&rsquo;s look at the implementation of <code>KeRegisterBugCheckReasonCallback</code>, and other related data structures.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// https://doxygen.reactos.org/d3/d13/bug_8c.html#a73fca11ec74d2871e8981bbcd00f0f24
+</span></span></span><span class="line"><span class="cl"><span class="n">BOOLEAN</span> <span class="nf">KeRegisterBugCheckReasonCallback</span><span class="p">(</span><span class="n">PKBUGCHECK_REASON_CALLBACK_RECORD</span> <span class="n">CallbackRecord</span><span class="p">,</span> <span class="n">PKBUGCHECK_REASON_CALLBACK_ROUTINE</span> <span class="n">CallbackRoutine</span><span class="p">,</span> <span class="n">KBUGCHECK_CALLBACK_REASON</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">PUCHAR</span> <span class="n">Component</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">KIRQL</span> <span class="n">OldIrql</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BOOLEAN</span> <span class="n">Status</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">KeRaiseIrql</span><span class="p">(</span><span class="n">HIGH_LEVEL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">OldIrql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span> <span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">State</span> <span class="o">==</span> <span class="n">BufferEmpty</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">Component</span> <span class="o">=</span> <span class="n">Component</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">CallbackRoutine</span> <span class="o">=</span> <span class="n">CallbackRoutine</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">State</span> <span class="o">=</span> <span class="n">BufferInserted</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">Reason</span> <span class="o">=</span> <span class="n">Reason</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">InsertTailList</span><span class="p">(</span><span class="o">&amp;</span><span class="n">KeBugcheckReasonCallbackListHead</span><span class="p">,</span><span class="o">&amp;</span><span class="n">CallbackRecord</span><span class="o">-&gt;</span><span class="n">Entry</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Status</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">KeLowerIrql</span><span class="p">(</span><span class="n">OldIrql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">Status</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>First <code>KeRegisterBugCheckReasonCallback</code> raises the IRQL to <code>HIGH_LEVEL</code>, then it checks if the callback record was initialized by <code>KeInitializeCallbackRecord</code> (This is just a macro for <code>PKBUGCHECK_REASON_CALLBACK_RECORD-&gt;State = BufferEmpty</code>). If it was then the callback record is initialized, and it gets inserted into the <code>KeBugcheckReasonCallbackList</code>. In our case it should be in the <code>KeBugCheckAddRemovePagesCallbackList</code>.</p>
+<p>But wait there&rsquo;s two more bug check lists:</p>
+<ul>
+<li><code>KeBugcheckCallbackListHead</code>: Used by callbacks registered by <code>KeRegisterBugCheckCallback</code></li>
+<li><code>KeBugCheckTriageDumpDataArrayListHead</code>: Used by callbacks of type <code>KbCallbackTriageDumpData</code></li>
+</ul>
+<p>Maybe you can remove a callback from these lists? I&rsquo;m not sure if these are protected by patch guard (KPP) or not.</p>
+<h2 id="hypervisor-detection-using-bug-check-callbacks">Hypervisor Detection Using Bug Check Callbacks</h2>
+<p>To give you more insight on how other people have used bug check callbacks in the anti-cheat space, let&rsquo;s go back six years. On april 13, 2020 members from <a href="https://secret.club">secret.club</a> (daax, iPower, ajkhoury and drew) wrote about how anti-cheats detect system emulation. In the section named <a href="https://secret.club/2020/04/13/how-anti-cheats-detect-system-emulation.html#xsetbv">XSETBV</a>, they talk about using the <code>XSETBV</code> instruction to intentionally generate a fault that will cause a VM-exit. Majority of public hypervisors used to analyze anti-cheat software will handle this in the host&rsquo;s <code>XSETBV</code> handler. Because of this and the driver not being able to handle SEH (it&rsquo;s manually mapped), the host will bug check (BSOD). This is why they registered a bug check callback routine using <code>KbCallbackSecondaryDumpData</code>, to add data to the crash dump and uniquely identify their crash data. Today we&rsquo;ll be removing data from the crash dump.</p>
+<h2 id="removing-the-anti-cheat-driver-from-the-crash-dump">Removing The Anti-Cheat Driver From The Crash Dump</h2>
+<p>Before we get started here&rsquo;s a little recap/road map, we&rsquo;ll call <code>KeRegisterBugCheckReasonCallback</code> to register our bug check reason callback so we can run code when the system bug checks. When calling this function we will supply <code>KbCallbackRemovePages</code> in the <code>Reason</code> argument, so the windows kernel knows that our callback will remove pages from the dump. Here&rsquo;s how I registered my bug check callback.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">callback_record</span> <span class="o">=</span> <span class="nf">ExAllocatePoolWithTag</span><span class="p">(</span><span class="n">NonPagedPool</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">KBUGCHECK_REASON_CALLBACK_RECORD</span><span class="p">),</span> <span class="n">CARDINAL_MEM_TAG</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">callback_record</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">cardinal_get_info</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">UCHAR</span> <span class="n">component</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;Bugcheckin</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">KeInitializeCallbackRecord</span><span class="p">(</span><span class="n">callback_record</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">KeRegisterBugCheckReasonCallback</span><span class="p">(</span><span class="n">callback_record</span><span class="p">,</span> <span class="n">cardinal_bugcheck_cb</span><span class="p">,</span> <span class="n">KbCallbackRemovePages</span><span class="p">,</span> <span class="n">component</span><span class="p">);</span>
+</span></span></code></pre></div><p>Each bug check reason callback routine has the following prototype.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">typedef</span> <span class="nf">VOID</span> <span class="p">(</span><span class="o">*</span><span class="kt">bugcheck_cb_t</span><span class="p">)(</span><span class="n">KBUGCHECK_CALLBACK_REASON</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">PKBUGCHECK_REASON_CALLBACK_RECORD</span> <span class="n">Record</span><span class="p">,</span> <span class="n">PVOID</span> <span class="n">ReasonSpecificData</span><span class="p">,</span> <span class="n">ULONG</span> <span class="n">ReasonSpecificDataLength</span><span class="p">)</span>
+</span></span></code></pre></div><p><code>Reason</code> will be one of the enum values for example.. <code>KbCallbackDumpIo</code>, <code>KbCallbackRemovePages</code>, <code>KbCallbackAddPages</code>, etc. Depending on the <code>Reason</code>, <code>ReasonSpecificData</code> can be cast to many other data structures. In our case we&rsquo;ll be casting it to <code>KBUGCHECK_REMOVE_PAGES</code>. When this callback routine is called, the kernel will have already populated the <code>BugCheckCode</code> member of this struct. We&rsquo;ll use that to determine what kind of crash it was.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">VOID</span> <span class="nf">cardinal_bugcheck_cb</span><span class="p">(</span><span class="n">KBUGCHECK_CALLBACK_REASON</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">PKBUGCHECK_REASON_CALLBACK_RECORD</span> <span class="n">Record</span><span class="p">,</span> <span class="n">PVOID</span> <span class="n">ReasonSpecificData</span><span class="p">,</span> <span class="n">ULONG</span> <span class="n">ReasonSpecificDataLength</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PKBUGCHECK_REMOVE_PAGES</span> <span class="n">bugcheck</span> <span class="o">=</span> <span class="p">(</span><span class="n">PKBUGCHECK_REMOVE_PAGES</span><span class="p">)</span><span class="n">ReasonSpecificData</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span> <span class="c1">// Bug checks intentionally generated by the keyboard and NotMyFault
+</span></span></span><span class="line"><span class="cl">        <span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">BugCheckCode</span> <span class="o">==</span> <span class="n">MANUALLY_INITIATED_CRASH</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">        <span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">BugCheckCode</span> <span class="o">==</span> <span class="n">KERNEL_MODE_HEAP_CORRUPTION</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">        <span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">BugCheckCode</span> <span class="o">==</span> <span class="n">PAGE_FAULT_IN_NONPAGED_AREA</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">        <span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">BugCheckCode</span> <span class="o">==</span> <span class="n">DRIVER_OVERRAN_STACK_BUFFER</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">        <span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">BugCheckCode</span> <span class="o">==</span> <span class="n">DRIVER_IRQL_NOT_LESS_OR_EQUAL</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[..</span><span class="n">snip</span><span class="p">..]</span>
+</span></span></code></pre></div><p>If the bug check code was one of the following, then we can start to remove the anti-cheat driver from the crash dump. To do this we need to populate three more members of the <code>KBUGCHECK_REMOVE_PAGES</code> struct. First, <code>KBUGCHECK_REMOVE_PAGES.Flags</code> this member determines if the address that we supply next is going to be a virtual or physical address. I&rsquo;ll be setting the <code>KB_REMOVE_PAGES_FLAG_VIRTUAL_ADDRESS</code> flag.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">Flags</span> <span class="o">|=</span> <span class="n">KB_REMOVE_PAGES_FLAG_VIRTUAL_ADDRESS</span><span class="p">;</span>
+</span></span></code></pre></div><p>To finalize removing the anti-cheat from the crash dump, we need to populate two more members. First <code>KBUGCHECK_REMOVE_PAGES.Address</code>, this tells the windows kernel where in the crash dump to start removing pages. This will be set to the base address of our driver. Second <code>KBUGCHECK_REMOVE_PAGES.Count</code>, this determines how many pages need to be removed from the start address. To populate both of these members I wrote a function that locates the base address and size of the anti-cheat driver, then calculates how many pages need to be removed from the crash dump.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">VOID</span> <span class="nf">cardinal_get_info</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[..</span><span class="n">snip</span><span class="p">..]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">PKLDR_DATA_TABLE_ENTRY</span> <span class="n">entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">PKLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">PsLoadedModuleList</span><span class="o">-&gt;</span><span class="n">Flink</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span> <span class="p">(</span><span class="n">PLIST_ENTRY</span><span class="p">)</span><span class="n">entry</span> <span class="o">!=</span> <span class="n">PsLoadedModuleList</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="nf">RtlCompareUnicodeString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">BaseDllName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">drv_name</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">DllBase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">SizeOfImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">PKLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">InLoadOrderLinks</span><span class="p">.</span><span class="n">Flink</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">cardinal_pg_sz</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span> <span class="o">+</span> <span class="n">PAGE_SIZE</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">PAGE_SIZE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cardinal_base</span> <span class="o">=</span> <span class="n">base</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Once these global variables are populated we can populate the members inside of our bug check callback.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">Address</span> <span class="o">=</span> <span class="n">cardinal_base</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">bugcheck</span><span class="o">-&gt;</span><span class="n">Count</span> <span class="o">=</span> <span class="n">cardinal_pg_sz</span><span class="p">;</span>
+</span></span></code></pre></div><p>Now if we intentionally crash the system while the anti-cheat driver is loaded, we won&rsquo;t be able to dump it to disk because the driver&rsquo;s pages we&rsquo;re removed from the crash dump! Rendering this method useless :). Let&rsquo;s see this in action, I won&rsquo;t be showing you how to crash the system you can find that information else where! What I did to test this was crash the system with the bug check callback registered. At first glance I didn&rsquo;t think this worked because I was able to see it in the list of loaded modules (stupid of me), then I tried to view the base address of the driver in windbg&rsquo;s Dissasembly tab and I was met with something interesting.</p>
+<blockquote>
+<p><img src="/images/memory-acquisition/2.png" alt="2"></p>
+</blockquote>
+<p>Trying to view the module in windbg also tells us that we can&rsquo;t view the module&rsquo;s info, because the pages aren&rsquo;t present in the crash dump and that&rsquo;s exactly what we want to hear :).</p>
+<blockquote>
+<p><img src="/images/memory-acquisition/3.png" alt="3"></p>
+</blockquote>
+<h2 id="bonus-detecting-crash-dump-registry-keys">Bonus: Detecting Crash Dump Registry Keys</h2>
+<p>Instead of fighting during the crash, why not just check to see if the registy keys that enable these types of crashes are enabled? This way we don&rsquo;t have to register a bug check callback routine if we don&rsquo;t have to because we&rsquo;ll know what to prepare for. The table below is a list of registry keys that can be used to bug check intentionally.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Path</th>
+					<th>Key</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\crashdump</td>
+					<td>CrashOnCtrlScroll</td>
+					<td>0x01</td>
+			</tr>
+			<tr>
+					<td>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\kbdhid\crashdump</td>
+					<td>CrashOnCtrlScroll</td>
+					<td>0x01</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="remarks">Remarks</h2>
+<p>I left out two methods of intentionally crashing the system from the bug check routine. I think it would be good for both sides to do the research themselves and find out what can be done next. I really enjoyed learning about this and I think that it&rsquo;s a very niche technique. I can&rsquo;t really see this being used anywhere else other than in rootkits and anti-cheats that are packed, and want to stunt analysis when they&rsquo;re unpacked. You can view the full code for this article <a href="https://github.com/codeneverdies/Cardinal">here</a>.</p>
+<h2 id="bug-check-references">Bug Check References</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-keregisterbugcheckcallback">KeRegisterBugCheckCallback</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-keregisterbugcheckreasoncallback">KeRegisterBugCheckReasonCallback</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/writing-a-bug-check-callback-routine">Writing a Bug Check Reason Callback Routine</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_kbugcheck_remove_pages">KBUGCHECK_REMOVE_PAGES structure</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/bug-check-0xe2--manually-initiated-crash">Bug Check 0xE2: MANUALLY_INITIATED_CRASH</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_kbugcheck_callback_reason">KBUGCHECK_CALLBACK_REASON enumeration</a></li>
+</ul>
+
+        </div>
+
+        <footer class="post__footer">
+          
+  <div class="term-list">
+    <span class="term-list__label">Tags:</span>
+    <ul class="term-list__items">
+        <li><a class="chip" href="/tags/bugcheck/">Bugcheck</a></li>
+        <li><a class="chip" href="/tags/crash-dump/">Crash Dump</a></li>
+        <li><a class="chip" href="/tags/kernel/">Kernel</a></li>
+        <li><a class="chip" href="/tags/anti-cheat/">Anti-Cheat</a></li>
+    </ul>
+  </div>
+
+          
+  <div class="term-list">
+    <span class="term-list__label">Categories:</span>
+    <ul class="term-list__items">
+        <li><a class="chip" href="/categories/game-security/">Game Security</a></li>
+        <li><a class="chip" href="/categories/windows-internals/">Windows Internals</a></li>
+    </ul>
+  </div>
+
+        </footer>
+      </article>
+
+      <aside class="post-sidebar" aria-label="Article details">
+  <div class="sidebar-block">
+    <p class="sidebar-label">Date</p>
+    <p class="sidebar-value">16.06.2026</p>
+  </div>
+
+  
+    <div class="sidebar-block">
+      <p class="sidebar-label">Categories</p>
+      <p class="sidebar-value sidebar-value--category"><a href="/categories/game-security/">GAME SECURITY</a>, <a href="/categories/windows-internals/">WINDOWS INTERNALS</a></p>
+    </div>
+  
+
+  
+    <div class="sidebar-block">
+      <p class="sidebar-label">Tags</p>
+      <p class="sidebar-value sidebar-value--tags"><a href="/tags/bugcheck/">BUGCHECK</a>, <a href="/tags/crash-dump/">CRASH DUMP</a>, <a href="/tags/kernel/">KERNEL</a>, <a href="/tags/anti-cheat/">ANTI-CHEAT</a></p>
+    </div>
+  
+
+  <div class="sidebar-block">
+    <p class="sidebar-label">Reading</p>
+    <p class="sidebar-value">8 min</p>
+  </div>
+
+  
+    <div class="sidebar-block sidebar-block--toc">
+      <p class="sidebar-label">Contents</p>
+      <nav class="sidebar-toc"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#memory-acquisition-via-crash-dumps">Memory Acquisition via Crash Dumps</a></li>
+    <li><a href="#stopping-memory-acquisition-via-crash-dumps">Stopping Memory Acquisition via Crash Dumps</a></li>
+    <li><a href="#about-bug-check-callback-routines">About Bug Check Callback Routines</a></li>
+    <li><a href="#hypervisor-detection-using-bug-check-callbacks">Hypervisor Detection Using Bug Check Callbacks</a></li>
+    <li><a href="#removing-the-anti-cheat-driver-from-the-crash-dump">Removing The Anti-Cheat Driver From The Crash Dump</a></li>
+    <li><a href="#bonus-detecting-crash-dump-registry-keys">Bonus: Detecting Crash Dump Registry Keys</a></li>
+    <li><a href="#remarks">Remarks</a></li>
+    <li><a href="#bug-check-references">Bug Check References</a></li>
+  </ul>
+</nav></nav>
+    </div>
+  
+</aside>
+    </div>
+  
+
+    </main>
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__copy">
+      © 2026 Nasir T.
+      
+    </p>
+    <ul class="site-footer__links">
+      
+        <li><a href="https://github.com/codeneverdies" rel="me noopener noreferrer">GitHub</a></li>
+      
+      
+        <li><a href="https://x.com/codeneverdies" rel="me noopener noreferrer">Twitter</a></li>
+      
+      
+      <li><a href="/index.xml">RSS</a></li>
+    </ul>
+  </div>
+</footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{{- $posts := .pages -}}
+{{- $id := .id | default "taxonomy-term-jump" -}}
+{{- $label := .label | default "Jump to post" -}}
+{{- if gt (len $posts) 0 -}}
+<div class="tag-jump">
+  <label class="tag-jump__label" for="{{ $id }}">{{ $label }}</label>
+  <select id="{{ $id }}" class="tag-jump__select" data-tag-jump>
+    <option value="" selected disabled>Choose an article…</option>
+    {{- range $posts -}}
+      <option value="{{ .RelPermalink }}">{{ .LinkTitle }}</option>
+    {{- end -}}
+  </select>
+</div>
+{{- end -}}

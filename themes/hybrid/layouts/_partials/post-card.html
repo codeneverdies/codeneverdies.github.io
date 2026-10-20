@@ -1,0 +1,40 @@
+{{- $page := .page -}}
+{{- $index := .index -}}
+{{- $total := .total -}}
+{{- $showNum := site.Params.showNumbers | default true -}}
+{{- $num := sub $total $index -}}
+
+<article class="card">
+  <div class="card__top">
+    {{ if $showNum }}<span class="card__num">{{ printf "%02d" $num }}</span>{{ end }}
+    <time datetime="{{ $page.Date.Format "2006-01-02" }}">{{ $page.Date.Format "Jan 2, 2006" }}</time>
+    <span class="card__read">{{ $page.ReadingTime }} min</span>
+  </div>
+  <h2 class="card__title"><a href="{{ $page.RelPermalink }}">{{ $page.LinkTitle }}</a></h2>
+  {{ with or $page.Description $page.Summary }}
+    <p class="card__deck">{{ . | plainify | truncate 280 }}</p>
+  {{ end }}
+  {{- $categories := $page.GetTerms "categories" -}}
+  {{- $tags := $page.GetTerms "tags" -}}
+  {{- if or $categories $tags -}}
+    <p class="card__tax">
+      {{- with $categories -}}
+        <span class="card__tax-cats">
+          {{- range $i, $term := . -}}
+            {{- if $i -}}, {{ end -}}
+            <a class="card__tax-cat" href="{{ $term.RelPermalink }}">{{ $term.LinkTitle }}</a>
+          {{- end -}}
+        </span>
+      {{- end -}}
+      {{- if and $categories $tags -}}<span class="card__tax-sep" aria-hidden="true">:</span>{{- end -}}
+      {{- with $tags -}}
+        <span class="card__tax-tags">
+          {{- range $i, $term := . -}}
+            {{- if $i -}}, {{ end -}}
+            <a class="card__tax-tag" href="{{ $term.RelPermalink }}">{{ $term.LinkTitle }}</a>
+          {{- end -}}
+        </span>
+      {{- end -}}
+    </p>
+  {{- end -}}
+</article>

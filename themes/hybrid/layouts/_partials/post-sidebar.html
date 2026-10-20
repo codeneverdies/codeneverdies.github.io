@@ -1,0 +1,42 @@
+<aside class="post-sidebar" aria-label="Article details">
+  <div class="sidebar-block">
+    <p class="sidebar-label">Date</p>
+    <p class="sidebar-value">{{ .Date.Format "02.01.2006" }}</p>
+  </div>
+
+  {{ with .GetTerms "categories" }}
+    <div class="sidebar-block">
+      <p class="sidebar-label">{{ if gt (len .) 1 }}Categories{{ else }}Category{{ end }}</p>
+      <p class="sidebar-value sidebar-value--category">
+        {{- range $i, $term := . -}}
+          {{- if $i -}}, {{ end -}}
+          <a href="{{ $term.RelPermalink }}">{{ upper $term.LinkTitle }}</a>
+        {{- end -}}
+      </p>
+    </div>
+  {{ end }}
+
+  {{ with .GetTerms "tags" }}
+    <div class="sidebar-block">
+      <p class="sidebar-label">{{ if gt (len .) 1 }}Tags{{ else }}Tag{{ end }}</p>
+      <p class="sidebar-value sidebar-value--tags">
+        {{- range $i, $term := . -}}
+          {{- if $i -}}, {{ end -}}
+          <a href="{{ $term.RelPermalink }}">{{ upper $term.LinkTitle }}</a>
+        {{- end -}}
+      </p>
+    </div>
+  {{ end }}
+
+  <div class="sidebar-block">
+    <p class="sidebar-label">Reading</p>
+    <p class="sidebar-value">{{ .ReadingTime }} min</p>
+  </div>
+
+  {{ with .TableOfContents }}
+    <div class="sidebar-block sidebar-block--toc">
+      <p class="sidebar-label">Contents</p>
+      <nav class="sidebar-toc">{{ . }}</nav>
+    </div>
+  {{ end }}
+</aside>

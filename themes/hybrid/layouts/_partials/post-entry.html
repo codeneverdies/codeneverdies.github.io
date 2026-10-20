@@ -1,0 +1,28 @@
+{{- $page := .page -}}
+{{- $index := .index -}}
+{{- $total := .total -}}
+{{- $showNum := site.Params.showNumbers | default true -}}
+{{- $num := sub $total $index -}}
+
+<article class="post-entry{{ if not $showNum }} post-entry--no-num{{ end }}">
+  {{ if $showNum }}
+    <div class="post-entry__num" aria-hidden="true">{{ printf "%02d" $num }}</div>
+  {{ end }}
+  <time class="post-entry__date" datetime="{{ $page.Date.Format "2006-01-02" }}">
+    {{ upper ($page.Date.Format "Jan 2 2006") }}
+  </time>
+  <div class="post-entry__body">
+    <h2 class="post-entry__title">
+      <a href="{{ $page.RelPermalink }}">{{ $page.LinkTitle }}</a>
+    </h2>
+    {{ with or $page.Description $page.Summary }}
+      <p class="post-entry__deck">{{ . | plainify | truncate 280 }}</p>
+    {{ end }}
+    <div class="post-entry__meta">
+      {{ range $page.GetTerms "categories" }}
+        <span class="chip chip--category"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></span>
+      {{ end }}
+      <span class="post-entry__read">{{ $page.ReadingTime }} min</span>
+    </div>
+  </div>
+</article>

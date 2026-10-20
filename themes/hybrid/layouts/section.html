@@ -1,0 +1,36 @@
+{{ define "main" }}
+  {{ $posts := .Pages }}
+  {{ if eq .Section "posts" }}
+    {{ $posts = sort $posts "Date" "desc" }}
+  {{ end }}
+  {{ $count := len $posts }}
+
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="page-header__deck">{{ . }}</p>
+    {{ end }}
+    {{ with .Content }}
+      <div class="prose page-intro">{{ . }}</div>
+    {{ end }}
+  </header>
+
+  {{ if eq .Section "posts" }}
+    <section class="feed feed--cards" aria-label="Posts">
+      {{ range $i, $page := $posts }}
+        {{ partial "post-card.html" (dict "page" $page "index" $i "total" $count) }}
+      {{ end }}
+    </section>
+  {{ else }}
+    <div class="card-grid">
+      {{ range $posts }}
+        <article class="card">
+          <h2 class="card__title"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+          {{ with .Description }}<p class="card__deck">{{ . }}</p>{{ end }}
+        </article>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{ template "_internal/pagination.html" . }}
+{{ end }}

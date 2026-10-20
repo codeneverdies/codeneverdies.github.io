@@ -1,0 +1,13 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s · %s" .Title site.Title }}{{ end }}</title>
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+{{- $favicon := site.Params.avatar | default "/images/author.jpg" | relURL -}}
+<link rel="icon" href="{{ $favicon }}" type="image/jpeg" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ $favicon }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "index.xml" | absURL }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+{{ partialCached "head/css.html" . }}
+{{ partialCached "head/js.html" . }}

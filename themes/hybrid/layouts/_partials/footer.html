@@ -1,0 +1,20 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__copy">
+      © {{ now.Year }} {{ site.Params.author | default site.Title }}.
+      {{ with site.Params.footer }}<span class="site-footer__note">{{ . }}</span>{{ end }}
+    </p>
+    <ul class="site-footer__links">
+      {{ with site.Params.github }}
+        <li><a href="{{ . }}" rel="me noopener noreferrer">GitHub</a></li>
+      {{ end }}
+      {{ with site.Params.twitter }}
+        <li><a href="{{ . }}" rel="me noopener noreferrer">Twitter</a></li>
+      {{ end }}
+      {{ with site.Params.mastodon }}
+        <li><a href="{{ . }}" rel="me noopener noreferrer">Mastodon</a></li>
+      {{ end }}
+      <li><a href="{{ "index.xml" | relLangURL }}">RSS</a></li>
+    </ul>
+  </div>
+</footer>

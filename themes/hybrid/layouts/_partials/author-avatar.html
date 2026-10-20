@@ -1,0 +1,11 @@
+{{- $src := site.Params.avatar | default "/images/author.png" -}}
+{{- $size := .size | default "md" -}}
+{{- $alt := .alt | default (printf "%s profile photo" (site.Params.author | default site.Title)) -}}
+<img
+  class="author-pfp author-pfp--{{ $size }}"
+  src="{{ $src | relURL }}"
+  alt="{{ $alt }}"
+  width="{{ if eq $size "sm" }}32{{ else if eq $size "lg" }}48{{ else }}40{{ end }}"
+  height="{{ if eq $size "sm" }}32{{ else if eq $size "lg" }}48{{ else }}40{{ end }}"
+  decoding="async"
+  loading="lazy">

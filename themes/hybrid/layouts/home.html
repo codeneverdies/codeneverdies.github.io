@@ -1,0 +1,22 @@
+{{ define "main" }}
+  {{ $posts := where site.RegularPages "Section" "posts" }}
+  {{ $sorted := sort $posts "Date" "desc" }}
+  {{ $count := len $sorted }}
+
+  <section class="hero">
+    <div class="hero__flare" aria-hidden="true"></div>
+    <h1 class="hero__title">{{ or site.Params.hero site.Title "Research." }}</h1>
+    <p class="hero__subtitle">{{ site.Params.subtitle }}</p>
+    <p class="hero__meta">
+      <span>{{ site.Params.author }}</span>
+      <span class="hero__dot" aria-hidden="true">·</span>
+      <span>{{ $count }} {{ cond (eq $count 1) "article" "articles" }}</span>
+    </p>
+  </section>
+
+  <section class="feed feed--cards" aria-label="Recent writing">
+    {{ range $i, $page := $sorted }}
+      {{ partial "post-card.html" (dict "page" $page "index" $i "total" $count) }}
+    {{ end }}
+  </section>
+{{ end }}

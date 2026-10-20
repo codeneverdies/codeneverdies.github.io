@@ -1,0 +1,13 @@
+{{ define "main" }}
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+    <p class="page-header__deck">
+      Tags label specific topics (e.g. <em>anti-cheat</em>, <em>edr</em>),
+      expand a tag to see every post that uses it.
+      Broad groupings like <em>game security</em> are under
+      <a href="{{ "/categories/" | relLangURL }}">Categories</a>.
+    </p>
+  </header>
+
+  {{ partial "taxonomy-terms-dropdown.html" (dict "taxonomy" "tags" "context" .) }}
+{{ end }}

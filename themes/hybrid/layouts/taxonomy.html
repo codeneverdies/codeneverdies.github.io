@@ -1,0 +1,22 @@
+{{ define "main" }}
+  {{ $taxonomy := .Data.Plural }}
+
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+    {{ if eq $taxonomy "categories" }}
+      <p class="page-header__deck">
+        Categories group posts by theme (e.g. <em>game security</em>, <em>red teaming</em>),
+        expand a category to see all posts in said category.
+      </p>
+    {{ else if eq $taxonomy "tags" }}
+      <p class="page-header__deck">
+        Tags label specific topics (e.g. <em>anti-cheat</em>, <em>edr</em>),
+        expand a tag to see every post that uses it.
+      </p>
+    {{ else }}
+      <p class="page-header__deck">Browse by {{ .Title | lower }}.</p>
+    {{ end }}
+  </header>
+
+  {{ partial "taxonomy-terms-dropdown.html" (dict "taxonomy" $taxonomy "context" .) }}
+{{ end }}

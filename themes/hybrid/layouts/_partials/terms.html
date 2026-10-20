@@ -1,0 +1,15 @@
+{{- $page := .page -}}
+{{- $taxonomy := .taxonomy -}}
+{{- $labels := dict "tags" "Tags" "categories" "Categories" -}}
+{{- $label := index $labels $taxonomy | default (humanize $taxonomy) -}}
+
+{{- with $page.GetTerms $taxonomy }}
+  <div class="term-list">
+    <span class="term-list__label">{{ $label }}:</span>
+    <ul class="term-list__items">
+      {{- range . }}
+        <li><a class="chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+      {{- end }}
+    </ul>
+  </div>
+{{- end }}

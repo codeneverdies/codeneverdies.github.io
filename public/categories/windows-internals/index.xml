@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Windows Internals on codeneverdies!</title>
+		<link>http://localhost:1313/categories/windows-internals/</link>
+		<description>Recent content in Windows Internals on codeneverdies!</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/categories/windows-internals/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Bugcheckin&#39; : Stopping Memory Acquisition via Crash Dumps</title>
+				<link>http://localhost:1313/posts/stopping-memory-acquisition/</link>
+				<pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/posts/stopping-memory-acquisition/</guid>
+				<description>&lt;h2 id=&#34;memory-acquisition-via-crash-dumps&#34;&gt;Memory Acquisition via Crash Dumps&lt;/h2&gt;&#xA;&lt;p&gt;During a quick chat with a seasoned game hacker (daax), dumping anti-cheat drivers from crash dumps has been around for a while. If the adversary isn&amp;rsquo;t skilled enough to conduct a BYOVD attack and dump the driver, they can resort to this easier method. Here&amp;rsquo;s some external research to help you understand what this article will be about. On april 7th, 2023 a clever person on the guided hacking website named &lt;a href=&#34;https://guidedhacking.com/members/mrmoo.256455/&#34;&gt;MrMoo&lt;/a&gt; showed us &lt;a href=&#34;https://guidedhacking.com/threads/how-to-extract-ea-anticheat-driver-via-crash-dumps.20328/&#34;&gt;How To Dump EA&amp;rsquo;s Driver&lt;/a&gt; by intentionally crashing the system. Once the system rebooted he analyzed the kernel crash dump with volatility to dump the anti-cheat driver. June 7th, 2024 a user on unknowncheats &lt;a href=&#34;https://www.unknowncheats.me/forum/members/5120071.html&#34;&gt;LabGuy94&lt;/a&gt; posted about the &lt;a href=&#34;https://www.unknowncheats.me/forum/anti-cheat-bypass/640987-abusing-windows-complete-memory-crash-dumps.html&#34;&gt;same technique&lt;/a&gt;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Inside Valve Anti-Cheat: How To Dump VAC Modules in 2025</title>
+				<link>http://localhost:1313/posts/dumping-vac-modules/</link>
+				<pubDate>Sun, 20 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/posts/dumping-vac-modules/</guid>
+				<description>&lt;p&gt;Below is a list of games that use &lt;strong&gt;VAC&lt;/strong&gt; &lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;, a longer list can be found here &lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;Call of Duty: Modern Warfare 2&#xA;Call of Duty: Modern Warfare 3&#xA;Counter-Strike (video game)&#xA;Counter-Strike: Condition Zero&#xA;Counter-Strike: Source&#xA;Counter-Strike 2&#xA;Day of Defeat&#xA;Day of Defeat: Source&#xA;Deathmatch Classic&#xA;Half-Life 2: Deathmatch&#xA;Half-Life Deathmatch: Source&#xA;Ricochet&#xA;Team Fortress&#xA;Team Fortress Classic&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;vac-cident&#34;&gt;VAC-cident?&lt;/h2&gt;&#xA;&lt;p&gt;So.. if you don&amp;rsquo;t know &lt;strong&gt;VAC&lt;/strong&gt; has been around for quite a while, at the time of writing it&amp;rsquo;ll be 23 years.&#xA;Over the time they&amp;rsquo;ve made some mistakes but who doesn&amp;rsquo;t? (Taken from wikipedia) &lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; &lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

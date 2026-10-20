@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside Valve Anti-Cheat: How To Dump VAC Modules in 2025 · codeneverdies!</title>
+<meta name="description" content="In 2002 Valve created an Anti-Cheat solution called Valve Anti-Cheat aka VAC. The first game they implemented VAC into was Counter-Strike. When VAC was introduced it only operated in User Mode (Still does) meaning it runs entirely in user space and has no kernel component."><link rel="icon" href="/images/author.jpg" type="image/jpeg" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/author.jpg">
+<link rel="alternate" type="application/rss+xml" title="codeneverdies!" href="http://localhost:1313/index.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+      <link rel="stylesheet" href="/css/main.css">
+
+
+      <script src="/js/main.js" defer></script>
+
+
+</head>
+<body class="layout-article layout-article-v0">
+  <div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
+    <div class="read-progress__bar" data-read-progress></div>
+  </div>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header class="site-header">
+  <div class="site-header__brand">
+    <a class="site-header__brand-link" href="/">
+      <img
+  class="author-pfp author-pfp--sm"
+  src="/images/author.jpg"
+  alt="Nasir T profile photo"
+  width="32"
+  height="32"
+  decoding="async"
+  loading="lazy">
+
+      <span class="site-header__title">codeneverdies!</span>
+    </a>
+  </div>
+  
+  <nav class="site-nav" aria-label="Primary">
+    <ul class="site-nav__list"><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/about/"
+            
+          >About</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/contact/"
+            
+          >Contact</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/categories/"
+            
+          >Categories</a>
+        </li><li class="site-nav__item">
+          <a
+            class="site-nav__link"
+            href="/tags/"
+            
+          >Tags</a>
+        </li>
+    </ul>
+  </nav>
+
+</header>
+
+    <main id="main" class="site-main">
+      
+  
+    <div class="post-layout">
+      <article class="post post__main">
+        <header class="post__header">
+          <div class="post__byline">
+            <img
+  class="author-pfp author-pfp--md"
+  src="/images/author.jpg"
+  alt="Nasir T profile photo"
+  width="40"
+  height="40"
+  decoding="async"
+  loading="lazy">
+
+            <span class="post__author">Nasir T</span>
+          </div>
+          <h1 class="post__title">Inside Valve Anti-Cheat: How To Dump VAC Modules in 2025</h1>
+          
+            <p class="post__deck">In 2002 Valve created an Anti-Cheat solution called Valve Anti-Cheat aka VAC. The first game they implemented VAC into was Counter-Strike. When VAC was introduced it only operated in User Mode (Still does) meaning it runs entirely in user space and has no kernel component.</p>
+          
+        </header>
+
+        <div class="prose post__body">
+          <p>Below is a list of games that use <strong>VAC</strong> <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, a longer list can be found here <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<pre><code>Call of Duty: Modern Warfare 2
+Call of Duty: Modern Warfare 3
+Counter-Strike (video game)
+Counter-Strike: Condition Zero
+Counter-Strike: Source
+Counter-Strike 2
+Day of Defeat
+Day of Defeat: Source
+Deathmatch Classic
+Half-Life 2: Deathmatch
+Half-Life Deathmatch: Source
+Ricochet
+Team Fortress
+Team Fortress Classic
+</code></pre>
+<hr>
+<h2 id="vac-cident">VAC-cident?</h2>
+<p>So.. if you don&rsquo;t know <strong>VAC</strong> has been around for quite a while, at the time of writing it&rsquo;ll be 23 years.
+Over the time they&rsquo;ve made some mistakes but who doesn&rsquo;t? (Taken from wikipedia) <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<pre><code>- In July 2010, [snip] Approximately 12,000 owners of Call of Duty: Modern Warfare 2 were 
+banned when Steam updated a DLL file on disk after it had been loaded into memory by the 
+game, causing a false positive detection. These bans were revoked and those affected received 
+a free copy of Left 4 Dead 2 or an extra copy to send as a gift. 
+
+- In October 2023, certain users of AMD graphics cards were banned from Counter-Strike 2 
+after AMD added support for their &quot;Anti-Lag+&quot; feature via a driver update, which the game 
+flagged as a cheat due to it detouring certain DLL functions. AMD subsequently withdrew the 
+driver update and Valve pledged to unban any affected users.
+</code></pre>
+<p>This post isn&rsquo;t created to bash Valve they clean up after their mistakes and listen to their community,
+gotta love devs when they do that. I also commend them because getting <strong>VAC</strong> banned isn&rsquo;t such a slap
+on the wrist. Getting <strong>VAC</strong> banned has some stipulations such as:</p>
+<ul>
+<li>Having the <strong>VAC</strong> ban show on your Steam profile</li>
+<li>Being banned from all <strong>&ldquo;GoldSrc&rdquo;</strong> games</li>
+<li>Being banned from all <strong>&ldquo;Source engine&rdquo;</strong> games (The Counter-Strike serise)</li>
+<li>Not being able to <strong>refund</strong> the game you&rsquo;re <strong>VAC</strong> banned on</li>
+</ul>
+<p>Knowing what&rsquo;ll happen if you get <strong>VAC</strong> banned is important to know because regardless if
+you&rsquo;re cheating or not false bans are no good. People in the community took it upon themselves
+to reverse engineer the Anti-Cheat and understand what it does (some did it just to cheat).</p>
+<hr>
+<h2 id="vac-what">VAC what?</h2>
+<p>The previous section brings us to a term you may have heard before, the infamous <strong>&ldquo;VAC Bypass&rdquo;</strong>.
+Searching online for information about bypassing <strong>VAC</strong> brings many blogs and repos that all seem to do/talk about something
+similar and that&rsquo;s &ldquo;Dumping the <strong>VAC</strong> modules&rdquo;. Let me explain, <strong>VAC</strong> is <strong>NOT</strong> just one executable on the system it streams it&rsquo;s
+Anti-Cheat modules (DLLs) from a server, once a module is recieved by some routine in <strong>steamservice.dll</strong> inside <strong>steamservice.exe</strong>
+(or <strong>steam.exe</strong> if <strong>ran as admin</strong>) it will be loaded using one of the two methods below. <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> <sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup> <sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup> <sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup> <sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup> <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup></p>
+<ul>
+<li><strong>Reflectively load</strong> the DLL into memory</li>
+<li>Use the WinAPI function <strong>LoadLibrary</strong></li>
+</ul>
+<p>By default the Anti-Cheat modules are reflectively loaded into memory. The goal is to force <strong>LoadLibrary</strong> into being used,
+then someone can hook that function and dump the modules (DLLs) to disk, allowing someone to analyse the dumped DLLs and understand
+what they&rsquo;re doing to detect cheating.</p>
+<hr>
+<h2 id="dumping-vac-modules-in-the-big-25">Dumping VAC Modules in the big &lsquo;25</h2>
+<p>To kick start the journey on dumping the <strong>VAC</strong> modules load <strong>steamservice.dll</strong> into <strong>Binary Ninja</strong>. Once the binary is fully analyzed
+go to &ldquo;Triage Summary&rdquo;</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-1.png" alt="VAC-1"></p>
+</blockquote>
+<p>It is <strong>VERY</strong> important to take note that this is a 32-bit process, so all pointers will be 32-bits in size you&rsquo;ll see why this is important later.</p>
+<p>Next we&rsquo;ll search for calls to <strong>LoadLibrary*</strong> I&rsquo;ll save the reader some time and tell you that we should be looking
+for calls to <strong>LoadLibraryW</strong> it will be called in a very important function that we can use to back track.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-2.png" alt="VAC-2"></p>
+</blockquote>
+<p>Following the reference takes us to an interesting function <strong>sub_10086f80</strong></p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-3.png" alt="VAC-3"></p>
+</blockquote>
+<p>Judging by the return value <strong>HMODULE</strong> and the calls to LoadLibrary* it&rsquo;s safe to say this function&rsquo;s job is to load
+some kind of module and return a handle to it. Following references to where this function is called leads us to another interesting
+function <strong>sub_10086c40</strong>.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-4.png" alt="VAC-4"></p>
+</blockquote>
+<p>The beginning of the <strong>sub_10086c40</strong> function didn&rsquo;t look too important (at the time) but we should remember that this function also returns a handle to a module.
+I looked at the references and it shows that this function is called once in the function <strong>sub_10059040</strong>.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-17.png" alt="VAC-17"></p>
+</blockquote>
+<p>We can see <strong>sub_10086c40</strong> being called if we trace back the <strong>first</strong> argument passed to that function,
+we&rsquo;ll see that it was used by another function <strong>sub_100859d0</strong>. If that function call is successful
+execution carries on, so it&rsquo;s safe to say it&rsquo;s important. Let&rsquo;s take a look at this function.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-18.png" alt="VAC-5"></p>
+</blockquote>
+<p>This function makes two WinAPI calls</p>
+<ul>
+<li>
+<p><strong>GetTempPathW</strong>
+: Retrieves the path of the directory designated for temporary files.</p>
+</li>
+<li>
+<p><strong>GetTempFileNameW</strong>
+: Creates a name for a temporary file. If a unique file name is generated, an empty file is created and the handle to it is released; otherwise, only a file name is generated.</p>
+</li>
+</ul>
+<p>The combination of these calls tells us that we need to be looking for any <code>.TMP</code> files being accessed, the names are usually in this format <code>&lt;uuuu&gt;.TMP</code>.</p>
+<p>Now there&rsquo;s a path to a DLL floating in memory how does it get used? Look no more.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-5.png" alt="VAC-5"></p>
+</blockquote>
+<pre tabindex="0"><code>100591f7   HMODULE eax_13 = sub_10086c40(edi_1, 0)
+100591ff   *(esi + 4) = eax_13
+100591ff   
+10059204   if (eax_13 != 0)
+10059215       int32_t eax_14 = sub_10086c20(eax_13, &#34;_runfunc@20&#34;)
+1005921d       *(esi + 0xc) = eax_14
+</code></pre><p>The path <code>edi_1</code> is used by <strong>sub_10086c40</strong>, this function is used to get a handle to a module <code>eax_13</code> then it&rsquo;s passing that handle to <strong>sub_10086c20</strong>.
+<strong>sub_10086c20</strong> takes two arguments we know the first is a handle to a module the second is from what we can see here a string <code>_runfunc@20</code>, the return value
+<code>int32_t</code> looks a little weird but this is a 32-bit process remember ;) so this could be a pointer to something dont ya think? Here&rsquo;s the function prototype</p>
+<pre tabindex="0"><code>int32_t sub_10086c20(HMODULE arg1, PSTR arg2)
+</code></pre><p>Place your bets on it being a GetProcAddress wrapper.. Drum roll please&hellip; It is&hellip;</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-6.png" alt="VAC-6"></p>
+</blockquote>
+<p>So with this bit of information we know <strong>steamservice.dll</strong> recieves the <strong>VAC</strong> modules, it&rsquo;s using a function <strong>sub_10086c40</strong> which calls
+<strong>sub_10086f80</strong> to load the Anti-Cheat module and return a handle, then that handle is passed to <strong>sub_10086c20</strong> to get the address
+of a function named <code>_runfunc@20</code>. By default as said earlier the modules are reflectively loaded so this isn&rsquo;t the regular control flow of
+<strong>steamservice.dll</strong>, this can be confirmed if you scroll up a bit in <strong>sub_10059040</strong> you&rsquo;ll see a flag being checked.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-7.png" alt="VAC-7"></p>
+</blockquote>
+<p><strong>steamservice.dll</strong> will most likely take this path unless we can do something about it</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-8.png" alt="VAC-8"></p>
+</blockquote>
+<p>Let&rsquo;s look at it in assembly</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-9.png" alt="VAC-9"></p>
+</blockquote>
+<p>Take a look at <code>je 0x10059127</code> ( <code>0x74 0x47</code> )</p>
+<p><code>0x74</code> is the jump if equal instruction and <code>0x47</code> is how many bytes forward to jump (71) in hex</p>
+<p>What we wan&rsquo;t to do is change the first instruction at <strong>steamservice.dll</strong> + 0x590DE (0x100590de)</p>
+<ul>
+<li>to <code>jne 0x10059127</code> ( <code>0x75 0x47</code> )</li>
+</ul>
+<p>we&rsquo;re changing the first byte of this instruction to be <code>0x75</code> which is jump if <strong>NOT</strong>
+zero/equal. (Inverting)</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-10.png" alt="VAC-10"></p>
+</blockquote>
+<p>Now that we have a potential way of dumping the <strong>VAC</strong> modules let&rsquo;s test it! first we start steam and launch <strong>x32dbg</strong> as
+admin we should remember the offset to our instructions <strong>steamservice.dll</strong> + 0x590DE.</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-11.png" alt="VAC-11"></p>
+</blockquote>
+<p>Once <strong>x32dbg</strong> is loaded attach to <strong>steamservice.dll</strong></p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-12.png" alt="VAC-12"></p>
+</blockquote>
+<p>Press <code>CTRL+G</code> and enter <code>steamservice.dll + 0x590DE</code></p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-13.png" alt="VAC-13"></p>
+</blockquote>
+<p>Now we&rsquo;re where we need to patch</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-14.png" alt="VAC-14"></p>
+</blockquote>
+<p>Right click on that instruction and click &ldquo;Assemble&rdquo; then enter <code>jnz 0x10059127</code> and hit ok</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-15.png" alt="VAC-15"></p>
+</blockquote>
+<p>It should be changed</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-16.png" alt="VAC-16"></p>
+</blockquote>
+<p>The next step is to open <strong>Procmon</strong> play a game that uses <strong>VAC</strong> (I chose CSGO) and wait for
+<strong>steamservice.exe</strong> to access some <code>.TMP</code> files.</p>
+<p>Here are the <strong>Procmon</strong> filters</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-19.png" alt="VAC-19"></p>
+</blockquote>
+<p>While loading the game we see our first TMP file <code>C:\Windows\Temp\D54A.tmp</code></p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-20.png" alt="VAC-20"></p>
+</blockquote>
+<p>Let&rsquo;s join a public match and see if there are others</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-21.png" alt="VAC-21"></p>
+</blockquote>
+<p>And some more..</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-22.png" alt="VAC-22"></p>
+</blockquote>
+<p>We can also look at these files in the temp directory..</p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-23.png" alt="VAC-23"></p>
+</blockquote>
+<p>I copied all of these files to a new directory and loaded <code>D54A.tmp</code> into <strong>PE-bear</strong></p>
+<blockquote>
+<p><img src="/images/vac-modules/VAC-24.png" alt="VAC-24"></p>
+</blockquote>
+<p>We see something familiar <code>_runfunc@20</code> this is the function that was found using <strong>sub_10086c20</strong>.</p>
+<hr>
+<h2 id="to-be-continued">To be continued</h2>
+<p>In the next post we will be doing analysis on these Anti-Cheat Modules to get a better understanding of what&rsquo;s going on.
+I hope you enjoyed this post and most importantly learned a thing or two. Stay tuned!</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://en.wikipedia.org/wiki/Valve_Anti-Cheat#Additional_restrictions">List of games that use VAC - 1</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://areweanticheatyet.com/?search=VAC&amp;sortOrder=&amp;sortBy=">Longer list of games that use VAC - 2</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://www.engadget.com/2010-07-27-valve-apologizes-for-banning-over-12-000-legit-modern-warfare-2.html">valve-apologizes-for-banning-over-12-000-legit-modern-warfare-2</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://www.tomshardware.com/news/amd-pulls-drivers-that-cause-counter-strike-2-bans-after-valve-roasted-them">amd-pulls-drivers-that-cause-counter-strike-2-bans</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://github.com/danielkrupinski/VAC-Bypass">danielkrupinski - VAC-Bypass</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="https://github.com/nevioo1337/VAC-ModuleDumper/">nevioo1337 - VAC-ModuleDumper</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p><a href="https://whereisr0da.github.io/blog/posts/2021-03-10-quick-vac/">whereisr0da - Valve Anti Cheat - Part 1 : Module loading</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8">
+<p><a href="https://cra0.net/blog/posts/archived/2015/rel-dumping-vac2-and-vac3-the-easier-way/">Cra0 - Dumping VAC2 and VAC3 the easier way</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9">
+<p><a href="https://github.com/twokilohertz/VacDumperInternal">twokilohertz -  VacDumperInternal</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10">
+<p><a href="https://web.archive.org/web/20240909100849/https://absceptual.me/posts/vac/">absceptual.me - Reversing VAC: Initalization</a>&#160;<a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11">
+<p><a href="https://github.com/danielkrupinski/vac-hooks/blob/master/vac-hooks/dllmain.c#L7">The actual patch we do in this blog</a>&#160;<a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12">
+<p><a href="https://www.unknowncheats.me/forum/anti-cheat-bypass/578728-preventvac-information.html">noobesgt - PreventVAC + Information</a>&#160;<a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+        </div>
+
+        <footer class="post__footer">
+          
+  <div class="term-list">
+    <span class="term-list__label">Tags:</span>
+    <ul class="term-list__items">
+        <li><a class="chip" href="/tags/vac/">VAC</a></li>
+        <li><a class="chip" href="/tags/anti-cheat/">Anti-Cheat</a></li>
+    </ul>
+  </div>
+
+          
+  <div class="term-list">
+    <span class="term-list__label">Categories:</span>
+    <ul class="term-list__items">
+        <li><a class="chip" href="/categories/game-security/">Game Security</a></li>
+        <li><a class="chip" href="/categories/windows-internals/">Windows Internals</a></li>
+    </ul>
+  </div>
+
+        </footer>
+      </article>
+
+      <aside class="post-sidebar" aria-label="Article details">
+  <div class="sidebar-block">
+    <p class="sidebar-label">Date</p>
+    <p class="sidebar-value">20.04.2025</p>
+  </div>
+
+  
+    <div class="sidebar-block">
+      <p class="sidebar-label">Categories</p>
+      <p class="sidebar-value sidebar-value--category"><a href="/categories/game-security/">GAME SECURITY</a>, <a href="/categories/windows-internals/">WINDOWS INTERNALS</a></p>
+    </div>
+  
+
+  
+    <div class="sidebar-block">
+      <p class="sidebar-label">Tags</p>
+      <p class="sidebar-value sidebar-value--tags"><a href="/tags/vac/">VAC</a>, <a href="/tags/anti-cheat/">ANTI-CHEAT</a></p>
+    </div>
+  
+
+  <div class="sidebar-block">
+    <p class="sidebar-label">Reading</p>
+    <p class="sidebar-value">7 min</p>
+  </div>
+
+  
+    <div class="sidebar-block sidebar-block--toc">
+      <p class="sidebar-label">Contents</p>
+      <nav class="sidebar-toc"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#vac-cident">VAC-cident?</a></li>
+    <li><a href="#vac-what">VAC what?</a></li>
+    <li><a href="#dumping-vac-modules-in-the-big-25">Dumping VAC Modules in the big &lsquo;25</a></li>
+    <li><a href="#to-be-continued">To be continued</a></li>
+  </ul>
+</nav></nav>
+    </div>
+  
+</aside>
+    </div>
+  
+
+    </main>
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__copy">
+      © 2026 Nasir T.
+      
+    </p>
+    <ul class="site-footer__links">
+      
+        <li><a href="https://github.com/codeneverdies" rel="me noopener noreferrer">GitHub</a></li>
+      
+      
+        <li><a href="https://x.com/codeneverdies" rel="me noopener noreferrer">Twitter</a></li>
+      
+      
+      <li><a href="/index.xml">RSS</a></li>
+    </ul>
+  </div>
+</footer>
+
+  </div>
+</body>
+</html>

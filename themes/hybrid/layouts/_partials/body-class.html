@@ -1,0 +1,21 @@
+{{- $classes := slice -}}
+{{- if .IsHome -}}
+  {{- $classes = $classes | append "layout-home" -}}
+{{- else if and .IsPage (eq .Section "posts") -}}
+  {{- $classes = $classes | append "layout-article" -}}
+  {{- $n := mod (len .Title) 4 -}}
+  {{- $classes = $classes | append (printf "layout-article-v%d" $n) -}}
+{{- else if eq .Kind "section" -}}
+  {{- $classes = $classes | append "layout-section" -}}
+  {{- with .Section }}{{ $classes = $classes | append (printf "layout-section--%s" .) }}{{ end -}}
+{{- else if eq .Kind "term" -}}
+  {{- $classes = $classes | append "layout-term" -}}
+  {{- with .Section }}{{ $classes = $classes | append (printf "layout-term--%s" .) }}{{ end -}}
+{{- else if eq .Kind "taxonomy" -}}
+  {{- $classes = $classes | append "layout-taxonomy" -}}
+  {{- with .Section }}{{ $classes = $classes | append (printf "layout-taxonomy--%s" .) }}{{ end -}}
+{{- else if .IsPage -}}
+  {{- $classes = $classes | append "layout-page" -}}
+  {{- with .File }}{{ $classes = $classes | append (printf "layout-page--%s" .ContentBaseName) }}{{ end -}}
+{{- end -}}
+{{- delimit $classes " " -}}

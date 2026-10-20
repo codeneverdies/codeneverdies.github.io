@@ -1,0 +1,9 @@
+<header class="site-header">
+  <div class="site-header__brand">
+    <a class="site-header__brand-link" href="{{ "/" | relLangURL }}">
+      {{ partial "author-avatar.html" (dict "size" "sm") }}
+      <span class="site-header__title">{{ site.Title }}</span>
+    </a>
+  </div>
+  {{ partial "menu.html" (dict "menuID" "main" "page" .) }}
+</header>

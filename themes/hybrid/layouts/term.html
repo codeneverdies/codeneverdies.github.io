@@ -1,0 +1,29 @@
+{{ define "main" }}
+  {{ $posts := sort .Pages "Date" "desc" }}
+  {{ $count := len $posts }}
+  {{ $isTag := eq .Section "tags" }}
+  {{ $isCategory := eq .Section "categories" }}
+
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+    <p class="page-header__deck">
+      {{- if $isTag -}}
+        {{ $count }} {{ cond (eq $count 1) "post" "posts" }} tagged &ldquo;{{ .Title }}&rdquo;.
+      {{- else if $isCategory -}}
+        {{ $count }} {{ cond (eq $count 1) "post" "posts" }} in &ldquo;{{ .Title }}&rdquo;.
+      {{- else -}}
+        {{ $count }} {{ cond (eq $count 1) "post" "posts" }}.
+      {{- end -}}
+    </p>
+  </header>
+
+  {{ if or $isTag $isCategory }}
+    {{ partial "taxonomy-term-jump.html" (dict "pages" $posts "id" (printf "%s-term-jump" .Section)) }}
+  {{ end }}
+
+  <section class="feed feed--cards" aria-label="Posts">
+    {{ range $i, $page := $posts }}
+      {{ partial "post-card.html" (dict "page" $page "index" $i "total" $count) }}
+    {{ end }}
+  </section>
+{{ end }}
